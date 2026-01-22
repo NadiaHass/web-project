@@ -47,7 +47,7 @@ CREATE INDEX idx_users_username ON users(username);
 -- ACTEURS
 -- =========================
 
-CREATE TABLE IF NOT EXISTS IF NOT EXISTS etudiants (
+CREATE TABLE IF NOT EXISTS etudiants (
     id SERIAL PRIMARY KEY,
     matricule VARCHAR(20) UNIQUE,
     nom VARCHAR(100),
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS inscriptions (
 -- INFRASTRUCTURE
 -- =========================
 
-CRECREATE TABLE IF NOT EXISTS batiments (
+CREATE TABLE IF NOT EXISTS batiments (
     id SERIAL PRIMARY KEY,
     nom VARCHAR(100)
 );
