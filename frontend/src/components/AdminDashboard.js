@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { generateTimetable, getConflicts, getExamens, getModules, getSalles, getProfesseurs, getStatistics } from '../services/api';
+import { generateTimetable, getConflicts, getExamens, getStatistics } from '../services/api';
 import './Dashboard.css';
 
 const AdminDashboard = () => {
