@@ -2,12 +2,12 @@
 -- STRUCTURE ACADEMIQUE
 -- =========================
 
-CREATE TABLE departements (
+CREATE TABLE IF NOT EXISTS departements (
     id SERIAL PRIMARY KEY,
     nom VARCHAR(100) UNIQUE NOT NULL
 );
 
-CREATE TABLE formations (
+CREATE TABLE IF NOT EXISTS formations (
     id SERIAL PRIMARY KEY,
     nom VARCHAR(150) NOT NULL,
     dept_id INT REFERENCES departements(id),
@@ -15,7 +15,7 @@ CREATE TABLE formations (
     nb_modules INT
 );
 
-CREATE TABLE modules (
+CREATE TABLE IF NOT EXISTS modules (
     id SERIAL PRIMARY KEY,
     nom VARCHAR(150),
     credits INT,
@@ -26,9 +26,13 @@ CREATE TABLE modules (
 -- USERS (AUTHENTICATION)
 -- =========================
 
-CREATE TYPE user_role AS ENUM ('admin', 'dean', 'dept_head', 'professor', 'student');
+DO $$ BEGIN
+    CREATE TYPE user_role AS ENUM ('admin', 'dean', 'dept_head', 'professor', 'student');
+EXCEPTION
+    WHEN duplicate_object THEN NULL;
+END $$;
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
@@ -43,7 +47,7 @@ CREATE INDEX idx_users_username ON users(username);
 -- ACTEURS
 -- =========================
 
-CREATE TABLE etudiants (
+CREATE TABLE IF NOT EXISTS IF NOT EXISTS etudiants (
     id SERIAL PRIMARY KEY,
     matricule VARCHAR(20) UNIQUE,
     nom VARCHAR(100),
@@ -52,7 +56,7 @@ CREATE TABLE etudiants (
     promo INT
 );
 
-CREATE TABLE professeurs (
+CREATE TABLE IF NOT EXISTS professeurs (
     id SERIAL PRIMARY KEY,
     nom VARCHAR(100),
     dept_id INT REFERENCES departements(id),
@@ -63,7 +67,7 @@ CREATE TABLE professeurs (
 -- INSCRIPTIONS
 -- =========================
 
-CREATE TABLE inscriptions (
+CREATE TABLE IF NOT EXISTS inscriptions (
     etudiant_id INT REFERENCES etudiants(id),
     module_id INT REFERENCES modules(id),
     PRIMARY KEY (etudiant_id, module_id)
@@ -73,12 +77,12 @@ CREATE TABLE inscriptions (
 -- INFRASTRUCTURE
 -- =========================
 
-CREATE TABLE batiments (
+CRECREATE TABLE IF NOT EXISTS batiments (
     id SERIAL PRIMARY KEY,
     nom VARCHAR(100)
 );
 
-CREATE TABLE salles (
+CREATE TABLE IF NOT EXISTS salles (
     id SERIAL PRIMARY KEY,
     nom VARCHAR(50),
     capacite INT,
@@ -90,7 +94,7 @@ CREATE TABLE salles (
 -- EXAMENS
 -- =========================
 
-CREATE TABLE examens (
+CREATE TABLE IF NOT EXISTS examens (
     id SERIAL PRIMARY KEY,
     module_id INT REFERENCES modules(id),
     date DATE,
@@ -100,13 +104,13 @@ CREATE TABLE examens (
     vice_dean_approved INT DEFAULT 0
 );
 
-CREATE TABLE examens_salles (
+CREATE TABLE IF NOT EXISTS examens_salles (
     examen_id INT REFERENCES examens(id),
     salle_id INT REFERENCES salles(id),
     PRIMARY KEY (examen_id, salle_id)
 );
 
-CREATE TABLE surveillances (
+CREATE TABLE IF NOT EXISTS surveillances (
     examen_id INT REFERENCES examens(id),
     prof_id INT REFERENCES professeurs(id),
     PRIMARY KEY (examen_id, prof_id)
