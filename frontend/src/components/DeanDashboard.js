@@ -3,7 +3,6 @@ import {
   getStatistics, 
   getConflicts, 
   getExamens, 
-  getSalles,
   getPendingViceDeanApprovals,
   approveExamViceDean
 } from '../services/api';
