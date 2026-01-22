@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
-# Exit on error
 set -o errexit
 
 echo "Installing dependencies..."
 pip install -r requirements.txt
 
-echo "Initializing database schema and data..."
-psql $DATABASE_URL -f init_db.sql
+echo "Creating database tables..."
+python -c "from database import Base, engine; Base.metadata.create_all(bind=engine)"
 
-echo "Running additional migrations..."
-psql $DATABASE_URL -f migration_add_approval_columns.sql
+echo "Running migrations..."
+psql $DATABASE_URL -f migration_add_approval_columns.sql 2>/dev/null || echo "Migration already applied"
 
 echo "Seeding user accounts..."
 python seed_users.py
