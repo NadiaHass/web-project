@@ -10,6 +10,9 @@ python -c "from database import Base, engine; Base.metadata.create_all(bind=engi
 echo "Running migrations..."
 psql $DATABASE_URL -f migration_add_approval_columns.sql 2>/dev/null || echo "Migration already applied"
 
+echo "Seeding initial data..."
+python seed_data.py
+
 echo "Seeding user accounts..."
 python seed_users.py
 
